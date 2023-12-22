@@ -2,6 +2,8 @@
 
 Выполнение ТЗ "томский политех" от Сибтехнологий. [Ссылка на шаблон фигма](https://www.figma.com/file/pObrgEFHQniLC9K5zXpcoF/%D0%A2%D0%B5%D1%81%D1%82%D0%BE%D0%B2%D0%BE%D0%B5?type=design&node-id=0%3A1&mode=design&t=U0n14JDnerpDrqzE-1)
 
+Страница добавлена на github pages и доступна по адресу: https://ilya-sonin.github.io/constructor-form/
+
 ## Запуск в dev режиме
 ```bash
 git clone https://github.com/ilya-sonin/constructor-form
