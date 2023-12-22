@@ -1,7 +1,7 @@
 <script>
 export default {
     name: 'cube-svg',
-    props: ['width', 'heigth']
+    props: ['width', 'height']
 }
 </script>
 

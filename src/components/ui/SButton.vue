@@ -34,8 +34,12 @@ export default {
     data () {
         return {
             buttonTextColor: 'white',
-            onHover: false
+            onHover: false,
+            classes: []
         }
+    },
+    created () {
+        this.getButtonClass();
     },
     methods: {
         getButtonClass () {
@@ -66,20 +70,26 @@ export default {
                 }
             }
 
-            return classes
+            this.classes = classes
         },
         mouseover () {
-            this.onHover = true;
+            if (this.type === 'simple') {
+                this.buttonTextColor = 'var(--sib-accent-color)';
+            } else {
+                this.buttonTextColor = 'white';
+                this.classes.push('sib-button_hover');
+            }
         },
         mouseout () {
-            this.onHover = false;
+            this.classes = this.classes.filter(c => c !== "sib-button_hover");
+            this.getButtonClass();
         }
     },
 }
 </script>
 
 <template>
-    <div class="sib-button" :class="getButtonClass()" :style="{ width, height }">
+    <div class="sib-button" :class="classes" :style="{ width, height }">
         <button :style="{ color: buttonTextColor, justifyContent: position }" @mouseover="mouseover" @mouseout="mouseout">
             <i v-if="icon !== null" class="icon" :class="icon"></i>
             <span>{{ text }}</span>
