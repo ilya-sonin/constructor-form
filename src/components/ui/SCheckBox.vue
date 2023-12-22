@@ -15,7 +15,7 @@ export default {
             default: 'normal', // bold
         },
     },
-    emits: ['update:value'],
+    emits: ['update:value', 'updateValue'],
     data () {
         return {
             selectedValue: false,
@@ -41,6 +41,7 @@ export default {
         },
         selectedValue (value) {
             this.$emit('update:value', value);
+            this.$emit('updateValue', value);
         },
     },
 }

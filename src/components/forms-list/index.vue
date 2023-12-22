@@ -31,7 +31,6 @@ export default {
             <SButton text="Создать форму" @click="addNewEmptyForm" />
         </div>
         <div class="sib-content__view forms-list">
-            <!-- BUG Левая панель увеличивается вместе с дополнением новых forms -->
             <SFormListElement v-for="form, index in forms" :form_name="form.form_name" :form_author="form.form_author"
                 :form_date_create="form.form_date_create" :key="form.form_id" @removeForm="removeFormByFormId(form.form_id)"
                 @openToEdit="openToEdit(form.form_id)" />

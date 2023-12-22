@@ -15,7 +15,7 @@ export default {
         },
         type: {
             type: String,
-            default: 'text'
+            default: 'text' // 'number'
         },
         value: {
             type: String || Number
@@ -80,6 +80,11 @@ export default {
     }
 
     input[type="text"]::placeholder {
+        color: #000;
+        opacity: 0.5;
+    }
+
+    input[type="number"]::placeholder {
         color: #000;
         opacity: 0.5;
     }

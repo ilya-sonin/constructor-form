@@ -29,6 +29,7 @@ body {
     font-style: normal;
 }
 
+/* ICONS */
 .arrow-left {
     background-image: url(./icons/arrow-left.svg);
     width: 10px;
@@ -40,3 +41,17 @@ body {
     width: 30px;
     height: 30px;
 }
+
+.chevron-up {
+    background-image: url(./icons/chevron-up.svg);
+    width: 16px;
+    height: 16px;
+}
+
+.chevron-down {
+    background-image: url(./icons/chevron-down.svg);
+    width: 16px;
+    height: 16px;
+}
+
+/* END ICONS */

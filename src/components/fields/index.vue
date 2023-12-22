@@ -32,6 +32,12 @@ export default {
 
             return [];
         },
+        selectedPage () {
+            if (this.pages != null && this.selectedPageId !== null) {
+                const pageIndex = this.pages.findIndex(element => element.form_page_id === this.selectedPageId);
+                return this.pages[pageIndex];
+            }
+        },
         pages () {
             if (this.selectedFormIndex !== -1) {
                 return this.forms[this.selectedFormIndex].pages;
@@ -55,9 +61,29 @@ export default {
         methodAddNewField (type) {
             this.addNewField(this.selectedFormIndex, this.selectedPageId, type)
         },
-        methodUpdateRequiredStatus ({ fieldId, requiredStatus }) { },
-        methodRemoveField ({ fieldType, fieldId }) {
-            this.removeField(this.selectedFormIndex, this.selectedPageId, fieldType, fieldId)
+        methodRemoveField ({ fieldId }, type) {
+            this.removeField(this.selectedFormIndex, this.selectedPageId, type, fieldId);
+        },
+        methodUpdateFieldName ({ fieldId, fieldName }, type) {
+            this.updateFieldName(this.selectedFormIndex, this.selectedPageId, type, fieldId, fieldName);
+        },
+        methodUpdateFieldType ({ fieldId, fieldType }, type) {
+            this.updateFieldType(this.selectedFormIndex, this.selectedPageId, type, fieldId, fieldType);
+        },
+        methodUpdateRequiredStatus ({ fieldId, requiredStatus }, type) {
+            this.updateFieldRequiredStatus(this.selectedFormIndex, this.selectedPageId, type, fieldId, requiredStatus);
+        },
+        methodUpdateFieldDataSource ({ fieldId, fieldDataSource }, type) {
+            this.updateFieldDataSource(this.selectedFormIndex, this.selectedPageId, type, fieldId, fieldDataSource);
+        },
+        methodUpdateFieldSelectBoxSelectTypeModel ({ fieldId, fieldSelectBoxSelectType }, type) {
+            this.updateFieldSelectBoxSelectTypeModel(this.selectedFormIndex, this.selectedPageId, type, fieldId, fieldSelectBoxSelectType);
+        },
+        methodHiddenField (fieldId) {
+            this.hiddenField(this.selectedFormIndex, this.selectedPageId, fieldId);
+        },
+        methodShowField (fieldId) {
+            this.showField(this.selectedFormIndex, this.selectedPageId, fieldId);
         },
 
         ...mapActions(useFormsStore, [
@@ -67,6 +93,15 @@ export default {
 
             'addNewField',
             'removeField',
+            'updateFieldName',
+            'updateFieldType',
+            'updateFieldRequiredStatus',
+            'updateFieldDataSource',
+            'updateFieldSelectBoxSelectTypeModel',
+            'hiddenField',
+            'showField',
+
+            'updateSelectedPageIndex',
         ])
     },
 }
@@ -78,25 +113,42 @@ export default {
             <div class="sib-content__header">
                 <h1>Поля</h1>
             </div>
-            <div class="sib-content__view form-constructor">
+            <div class="sib-content__view">
                 <div class="fields">
                     <div class="fields__element fields__hidden">
-                        <h2>Скрытие поля</h2>
+                        <h2>Скрытые поля</h2>
 
-                        <FieldElement v-for="hidden in hiddenFields" :key="hidden.field_id" :field="hidden" />
+                        <FieldElement v-for="hidden in hiddenFields" :key="hidden.field_id" :fieldId="hidden.field_id"
+                            :fieldName="hidden.field_name" :fieldType="hidden.field_type"
+                            :fieldRequired="hidden.field_required" :fieldDataSource="hidden.field_datasource"
+                            :fieldSelectBoxSelectType="hidden.field_selectbox_type" type="hidden"
+                            @updateFieldName="methodUpdateFieldName($event, 'hidden')"
+                            @updateFieldType="methodUpdateFieldType($event, 'hidden')"
+                            @updateRequiredStatus="methodUpdateRequiredStatus($event, 'hidden')"
+                            @removeField="methodRemoveField($event, 'hidden')"
+                            @updateFieldDataSource="methodUpdateFieldDataSource($event, 'hidden')"
+                            @updateFieldSelectBoxSelectTypeModel="methodUpdateFieldSelectBoxSelectTypeModel($event, 'hidden')"
+                            @hiddenField="methodHiddenField" @showField="methodShowField" />
 
                         <SSpecialButton text="Добавить поле" :visible="selectedPageId !== null"
-                            @click="methodAddNewField('show')" />
+                            @click="methodAddNewField('hidden')" />
                     </div>
                     <div class="fields__element fields__show">
                         <h2>Поля</h2>
 
                         <FieldElement v-for="show in showFields" :key="show.field_id" :fieldId="show.field_id"
                             :fieldName="show.field_name" :fieldType="show.field_type" :fieldRequired="show.field_required"
-                            @updateRequiredStatus="methodUpdateRequiredStatus($event)" @removeField="methodRemoveField" />
+                            :fieldDataSource="show.field_datasource" :fieldSelectBoxSelectType="show.field_selectbox_type"
+                            type="show" @updateFieldName="methodUpdateFieldName($event, 'show')"
+                            @updateFieldType="methodUpdateFieldType($event, 'show')"
+                            @updateRequiredStatus="methodUpdateRequiredStatus($event, 'show')"
+                            @removeField="methodRemoveField($event, 'show')"
+                            @updateFieldDataSource="methodUpdateFieldDataSource($event, 'show')"
+                            @updateFieldSelectBoxSelectTypeModel="methodUpdateFieldSelectBoxSelectTypeModel($event, 'show')"
+                            @hiddenField="methodHiddenField" @showField="methodShowField" />
 
                         <SSpecialButton text="Добавить поле" :visible="selectedPageId !== null"
-                            @click="methodAddNewField('show')" @removeField="methodRemoveField" />
+                            @click="methodAddNewField('show')" />
                     </div>
                     <div class="fields__element fields__pages">
                         <h2>Страницы</h2>
@@ -111,7 +163,8 @@ export default {
                 </div>
             </div>
         </div>
-        <FormDemo :form="forms[selectedFormIndex]" />
+        <FormDemo :form="forms[selectedFormIndex]" :selectedPage="selectedPage"
+            @updateSelectedPageIndex="updateSelectedPageIndex(selectedFormIndex, $event)" />
     </div>
 </template>
 
@@ -126,8 +179,6 @@ export default {
     padding-left: 4%;
     padding-right: 8%;
 }
-
-.form-constructor {}
 
 .fields {
     display: flex;

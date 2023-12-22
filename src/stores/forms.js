@@ -12,7 +12,8 @@ export const useFormsStore = defineStore('forms', {
                 pages: [] // { fields: { hidden_fields: [], show_fields: [] } }
             }
         ],
-        selectedFormIndex: 0 // TODO поменять на -1
+        selectedFormIndex: -1,
+        selectedPageIndex: -1,
     }),
     getters: {},
     actions: {
@@ -23,11 +24,11 @@ export const useFormsStore = defineStore('forms', {
 
             return -1;
         },
-        getFieldIndexById (formIndex, pageId, fieldType, fieldId) {
-            const pageIndex = this.getPageIndexById(formIndex, pageIndex);
+        getFieldIndexById (formIndex, pageId, type, fieldId) {
+            const pageIndex = this.getPageIndexById(formIndex, pageId);
 
             if (pageIndex !== -1) {
-                if (fieldType === 'hidden') {
+                if (type === 'hidden') {
                     return { pageIndex, fieldIndex: this.forms[formIndex].pages[pageIndex].fields.hidden_fields.findIndex(field => field.field_id === fieldId) };
                 } else {
                     return { pageIndex, fieldIndex: this.forms[formIndex].pages[pageIndex].fields.show_fields.findIndex(field => field.field_id === fieldId) };
@@ -39,6 +40,11 @@ export const useFormsStore = defineStore('forms', {
 
         updateSelectedFormIndex (form_id) {
             this.selectedFormIndex = this.forms.findIndex(item => item.form_id === form_id);
+            return this.selectedFormIndex;
+        },
+        updateSelectedPageIndex (formIndex, pageId) {
+            this.selectedPageIndex = this.forms[formIndex].pages.findIndex(page => page.form_page_id === pageId);
+            return this.selectedPageIndex;
         },
 
         // --- form Controllers ---
@@ -68,6 +74,11 @@ export const useFormsStore = defineStore('forms', {
             }
 
             return false;
+        },
+        updateFormName (formIndex, formName) {
+            if (formIndex !== -1) {
+                this.forms[formIndex].form_name = formName;
+            }
         },
         // --- END form controllers ---
 
@@ -118,21 +129,22 @@ export const useFormsStore = defineStore('forms', {
          * 
          * @param {Number} formIndex : Index form 
          * @param {String} pageId : Page id 
-         * @param {String} fieldType 'show' | 'hidden'  
+         * @param {String} type 'show' | 'hidden'  
          */
-        addNewField (formIndex, pageId, fieldType = 'show') {
+        addNewField (formIndex, pageId, type = 'show') {
             if (formIndex !== -1 && pageId !== null) {
                 const fieldOptions = {
                     field_id: nanoid(),
                     field_name: 'Новый field',
                     field_type: 'text', // 'number', 'select_box
                     field_required: false,
-                    field_datasource: null // if (selecte_box) Array
+                    field_datasource: null, // if (selecte_box) string in render covert to array
+                    field_selectbox_type: 'единичный'//  || 'множественный'
                 };
                 const index = this.getPageIndexById(formIndex, pageId);
 
                 if (index !== -1) {
-                    if (fieldType === 'hidden') {
+                    if (type === 'hidden') {
                         this.forms[formIndex].pages[index].fields.hidden_fields.push(fieldOptions);
                     } else {
                         this.forms[formIndex].pages[index].fields.show_fields.push(fieldOptions);
@@ -140,29 +152,107 @@ export const useFormsStore = defineStore('forms', {
                 }
             }
         },
-        updateFieldName (formIndex, pageId, fieldType, fieldId, fieldName) {
+        updateFieldName (formIndex, pageId, type, fieldId, fieldName) {
             if (formIndex !== -1 && pageId !== null && fieldId !== null) {
-                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, fieldType, fieldId);
+                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, type, fieldId);
 
                 if (pageIndex !== -1 && fieldIndex !== -1) {
-                    if (fieldType === 'hidden') {
-                        this.forms[formIndex].pages[pageIndex].fields.fields.hidden_fields[fieldIndex].field_name = fieldName;
+                    if (type === 'hidden') {
+                        this.forms[formIndex].pages[pageIndex].fields.hidden_fields[fieldIndex].field_name = fieldName;
                     } else {
-                        this.forms[formIndex].pages[pageIndex].fields.fields.show_fields[fieldIndex].field_name = fieldName;
+                        this.forms[formIndex].pages[pageIndex].fields.show_fields[fieldIndex].field_name = fieldName;
                     }
                 }
             }
         },
-        removeField (formIndex, pageId, { fieldType, fieldId }) {
+        updateFieldType (formIndex, pageId, type, fieldId, fieldType) {
             if (formIndex !== -1 && pageId !== null && fieldId !== null) {
-                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, fieldType, fieldId);
+                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, type, fieldId);
 
                 if (pageIndex !== -1 && fieldIndex !== -1) {
-                    if (fieldType === 'hidden') {
-                        this.forms[formIndex].pages[pageIndex].fields.fields.hidden_fields[fieldIndex].field_name = fieldName;
+                    if (type === 'hidden') {
+                        this.forms[formIndex].pages[pageIndex].fields.hidden_fields[fieldIndex].field_type = fieldType;
                     } else {
-                        this.forms[formIndex].pages[pageIndex].fields.fields.show_fields[fieldIndex].field_name = fieldName;
+                        this.forms[formIndex].pages[pageIndex].fields.show_fields[fieldIndex].field_type = fieldType;
                     }
+                }
+            }
+        },
+        updateFieldRequiredStatus (formIndex, pageId, type, fieldId, fieldRequiredStatus) {
+            if (formIndex !== -1 && pageId !== null && fieldId !== null) {
+                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, type, fieldId);
+
+                if (pageIndex !== -1 && fieldIndex !== -1) {
+                    if (type === 'hidden') {
+                        this.forms[formIndex].pages[pageIndex].fields.hidden_fields[fieldIndex].field_required = fieldRequiredStatus;
+                    } else {
+                        this.forms[formIndex].pages[pageIndex].fields.show_fields[fieldIndex].field_required = fieldRequiredStatus;
+                    }
+                }
+            }
+        },
+        updateFieldDataSource (formIndex, pageId, type, fieldId, fieldDataSource) {
+            if (formIndex !== -1 && pageId !== null && fieldId !== null) {
+                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, type, fieldId);
+
+                if (pageIndex !== -1 && fieldIndex !== -1) {
+                    if (type === 'hidden') {
+                        this.forms[formIndex].pages[pageIndex].fields.hidden_fields[fieldIndex].field_datasource = fieldDataSource;
+                    } else {
+                        this.forms[formIndex].pages[pageIndex].fields.show_fields[fieldIndex].field_datasource = fieldDataSource;
+                    }
+                }
+            }
+        },
+        updateFieldSelectBoxSelectTypeModel (formIndex, pageId, type, fieldId, fieldSelectBoxSelectType) {
+            if (formIndex !== -1 && pageId !== null && fieldId !== null) {
+                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, type, fieldId);
+
+                if (pageIndex !== -1 && fieldIndex !== -1) {
+                    if (type === 'hidden') {
+                        this.forms[formIndex].pages[pageIndex].fields.hidden_fields[fieldIndex].field_selectbox_type = fieldSelectBoxSelectType;
+                    } else {
+                        this.forms[formIndex].pages[pageIndex].fields.show_fields[fieldIndex].field_selectbox_type = fieldSelectBoxSelectType;
+                    }
+                }
+            }
+        },
+        removeField (formIndex, pageId, type, fieldId) {
+            if (formIndex !== -1 && pageId !== null && fieldId !== null) {
+                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, type, fieldId);
+
+                if (pageIndex !== -1 && fieldIndex !== -1) {
+                    if (type === 'hidden') {
+                        this.forms[formIndex].pages[pageIndex].fields.hidden_fields.splice(fieldIndex, 1);
+                    } else {
+                        this.forms[formIndex].pages[pageIndex].fields.show_fields.splice(fieldIndex, 1);
+                    }
+                }
+            }
+        },
+        hiddenField (formIndex, pageId, fieldId) {
+            if (formIndex !== -1 && pageId !== null && fieldId !== null) {
+                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, 'show', fieldId);
+
+                if (pageIndex !== -1 && fieldIndex !== -1) {
+                    const field = this.forms[formIndex].pages[pageIndex].fields.show_fields[fieldIndex];
+
+                    this.forms[formIndex].pages[pageIndex].fields.show_fields.splice(fieldIndex, 1);
+
+                    this.forms[formIndex].pages[pageIndex].fields.hidden_fields.push(field);
+                }
+            }
+        },
+        showField (formIndex, pageId, fieldId) {
+            if (formIndex !== -1 && pageId !== null && fieldId !== null) {
+                const { pageIndex, fieldIndex } = this.getFieldIndexById(formIndex, pageId, 'hidden', fieldId);
+
+                if (pageIndex !== -1 && fieldIndex !== -1) {
+                    const field = this.forms[formIndex].pages[pageIndex].fields.hidden_fields[fieldIndex];
+
+                    this.forms[formIndex].pages[pageIndex].fields.hidden_fields.splice(fieldIndex, 1);
+
+                    this.forms[formIndex].pages[pageIndex].fields.show_fields.push(field);
                 }
             }
         },

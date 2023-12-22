@@ -23,7 +23,7 @@ export default {
                 <div class="authentication-form">
                     <STextBox placeholder="Логин" />
                     <STextBox placeholder="Пароль" />
-                    <SButton text="Вход" style="margin-top: 1.5em;" />
+                    <SButton text="Вход" style="margin-top: 1.5em;" @click="$router.push('/panel')" />
                 </div>
             </div>
             <div class="sib__section authentication-help-section">

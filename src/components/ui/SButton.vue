@@ -68,8 +68,6 @@ export default {
 
             return classes
         },
-        // BUG Maximum recursive updates exceeded in component <s-button>. This means you have a reactive effect that is mutating its own dependencies and thus 
-        //    recursively triggering itself. Possible sources include component template, render function, updated hook or watcher source function. 
         mouseover () {
             this.onHover = true;
         },

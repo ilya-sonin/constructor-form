@@ -1,29 +1,82 @@
-# tz-sibtechnology
+# Constructor form
 
-This template should help get you started developing with Vue 3 in Vite.
+Выполнение ТЗ "томский политех" от Сибтехнологий. [Ссылка на шаблон фигма](https://www.figma.com/file/pObrgEFHQniLC9K5zXpcoF/%D0%A2%D0%B5%D1%81%D1%82%D0%BE%D0%B2%D0%BE%D0%B5?type=design&node-id=0%3A1&mode=design&t=U0n14JDnerpDrqzE-1)
 
-## Recommended IDE Setup
+## Запуск в dev режиме
+```bash
+git clone https://github.com/ilya-sonin/constructor-form
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+cd constructor-form
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
 npm install
+
+npm run dev # localhost:5173
 ```
 
-### Compile and Hot-Reload for Development
+## Описание страниц
 
-```sh
-npm run dev
-```
+Всего представлено 5 страниц:
+- Страница авторизации `/`
+- Страница работа с формами `/panel`
+- Страница "Тип формы" `/panel/form`
+- Страница "Поля" `/panel/form`
+- Страница с просмотром готовой формы `/panel/form/page`
 
-### Compile and Minify for Production
+### Страница авторизации
 
-```sh
-npm run build
-```
+Возможные действия на странице:
+
+- Клик на кнопку "Вход" -> переход на страницу "Страница с формами"
+
+![Страница авториции](https://github.com/ilya-sonin/constructor-form/raw/master/public/readme/auth_page.png)
+
+### Страница работа с формами
+
+Возможные действия на странице:
+
+- Клик на кнопку "Создать форму" -> создается новая форма с названием Новая форма
+- Клик на кнопку "Редактировать" -> переход на страницу "Тип формы" `/panel/form`
+- Клик на кнопку "Удалить" -> удаляет форму 
+
+![Страница работа с формами](https://github.com/ilya-sonin/constructor-form/raw/master/public/readme/form_view.png)
+
+### Страница "Тип формы"
+
+Возможные действия на странице:
+
+- Редактирование поля "Название форым" -> меняет название формы
+
+![Страница "Тип формы"](https://github.com/ilya-sonin/constructor-form/raw/master/public/readme/form_edit.png)
+
+### Страница "Поля"
+
+Для перехода на эту страницу нужно в левом меню нажать на пункт "Поля"
+
+Возможные действия на странице (инструкция по добавлению нового поля):
+
+1. Для создания формы нужно создать новую страницу. У формы может быть множество страниц. Для этого нужно нажать на кнопку "Добавить страницу формы" -> будет создана страница с названием "Новая страница формы"
+    - для редактирование названия страницы нужно ее выбрать, чтобы это сделать нужно поставить галочку напротив страницы
+    - после нажатия галочки разблокируется возможность добавления полей
+2. Для добавления полей на страницу, нужно нажать на кнопку "Добавить поле" -> будет создано поле с названием "Новый field", по умолчанию его тип text
+    - полю можно сменить названием отредактировав первое поле, где написано "Новый field" 
+    - у поля есть возможность выбрать тип. Типа всего 3: text, number, selectbox
+    - поле можно сделать обязательным нажав на кнопку "Сделать поле обязательным"
+    - поле можно скрыть/показать -> поле перенесется в "Скрытые поля" / "Поля"
+    - поле можно удалить
+    - если в редакторе выбрать тип selectbox, появится возможность редактирование настроек selectbox-а
+        - 1 поле "Введите через запятую содержимое selectBox" -> заполнит dataSource selectbox-а данными. Пример заполнения: "элемент1, элемент2, элемент3"
+        - 2 поле "Выберите тип поля selectbox" -> выбор в поле selectbox,  может быть "единичным" и "множественным"
+3. Справа отображается предпросмотр формы. Есть возможность открыть форму на всю страницу, для этого нужно нажать на кнопку "Открыть страницу"
+
+![Страница поля 1](https://github.com/ilya-sonin/constructor-form/raw/master/public/readme/fields1.png)
+
+![Страница поля 2](https://github.com/ilya-sonin/constructor-form/raw/master/public/readme/fields2.png)
+
+
+## Страница с просмотром готовой формы
+
+Возможные действия на странице:
+
+- Просмотр формы
+
+![Просмотр формы](https://github.com/ilya-sonin/constructor-form/raw/master/public/readme/form_show.png)
