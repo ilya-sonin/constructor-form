@@ -9,11 +9,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "nanoid": "^5.0.4",
     "pinia": "^2.1.7",
-    "vue": "^3.3.10"
+    "vue": "^3.3.10",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.1",
+    "sass": "^1.69.5",
     "vite": "^5.0.5"
   }
 }

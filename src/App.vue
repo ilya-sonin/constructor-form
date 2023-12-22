@@ -1,47 +1,91 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script>
+import { RouterView } from 'vue-router'
+
+export default {
+  name: 'app',
+  components: { RouterView }
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
   <main>
-    <TheWelcome />
+    <RouterView />
   </main>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
+<style lang="scss">
+.sib-container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 0.25fr 1fr;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.sib {
+  padding: 15% 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+.sib-logo {
+  width: 117px;
+  height: 30px;
+}
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.sib-href {
+  color: var(--sib-accent-color);
+}
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+.sib-content {
+  padding-top: 4%;
+  padding-left: 4%;
+  padding-right: 8%;
+  background-color: var(--sib-special-white);
+
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.sib-content__header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    font-size: 40px;
+    font-weight: 700;
   }
 }
+
+.sib-content__view {
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+  }
+}
+
+.sib-menu-container__buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+
+// SIB-form
+.sib-form {
+  background-color: #fff;
+  border-radius: 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+  }
+}
+// SIB-form
 </style>

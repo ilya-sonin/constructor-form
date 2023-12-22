@@ -1,35 +1,42 @@
-@import './base.css';
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+@font-face {
+    font-family: 'Cera Pro';
+    src: url('./fonts/CeraPro-Regular.ttf') format('truetype');
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+:root {
+    --sib-accent-color: #3ea748;
+    --sib-hover-color: #2b7432;
+    --sib-special-white: #F6F6F6;
+    --sib-special-text-color: #676767;
+    --sib-special-black: #212121;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    box-sizing: border-box;
+    outline: none;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+body {
+    font-family: Cera Pro;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.arrow-left {
+    background-image: url(./icons/arrow-left.svg);
+    width: 10px;
+    height: 10px;
+}
+
+.plus {
+    background-image: url(./icons/plus.svg);
+    width: 30px;
+    height: 30px;
 }
